@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Include href="KnownImageIds.vsct"/>
+  <Include href="VSGlobals.vsct"/>
+
+  <Commands package="CommandServer">
+    <Groups>
+      <Group guid="CommandServer" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="VSMainMenu" id="Tools"/>
+      </Group>
+    </Groups>
+
+    <!--This section defines the elements the user can interact with, like a menu command or a button
+        or combo box in a toolbar. -->
+    <Buttons>
+      <Button guid="CommandServer" id="ReceiveCommand" priority="0x0100" type="Button">
+        <Parent guid="CommandServer" id="MyMenuGroup" />
+        <Icon guid="ImageCatalogGuid" id="StatusInformation" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <Strings>
+          <ButtonText>Receive Command</ButtonText>
+          <LocCanonicalName>.CommandServer.ReceiveCommand</LocCanonicalName>
+        </Strings>
+      </Button>
+
+    <Button guid="CommandServer" id="ServerInit" priority="0x0100" type="Button">
+        <Parent guid="CommandServer" id="MyMenuGroup" />
+	    <Icon guid="ImageCatalogGuid" id="SendSignalAction" />
+	    <CommandFlag>CommandWellOnly</CommandFlag>
+	    <Strings>
+		    <ButtonText>Initialise</ButtonText>
+		    <LocCanonicalName>.CommandServer.Init</LocCanonicalName>
+	    </Strings>
+    </Button>
+    </Buttons>
+  </Commands>
+
+
+	<!-- eventually ctrl-shift-f17"-->
+  <KeyBindings>
+	  <KeyBinding guid="CommandServer" id="ServerInit" editor="guidVSStd97" key1="#" mod1="Control ALT" />
+  </KeyBindings>
+
+  <Symbols>
+	  <GuidSymbol name="CommandServerOutputWindow" value="{f5b52007-cc1b-485a-97e8-e19f2b4f6e99}"/>
+	  <GuidSymbol name="CommandServer" value="{b727b8d1-2065-4540-a5b2-e581ba31b362}">
+		  <IDSymbol name="MyMenuGroup" value="0x0001" />
+          <IDSymbol name="ReceiveCommand" value="0x0100" />
+		  <IDSymbol name="ServerInit" value="0x0110" />
+	  </GuidSymbol>
+  </Symbols>
+</CommandTable>
