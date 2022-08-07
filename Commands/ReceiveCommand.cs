@@ -5,7 +5,9 @@
     {
         protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
         {
-            await VS.MessageBox.ShowWarningAsync("CommandServer", "Button clicked");
+            var output = await VS.Services.GetOutputWindowAsync().ConfigureAwait(false);
+            output.GetPane(PackageGuids.CommandServer, out var pane);
+            pane.OutputStringThreadSafe($"Command received {Environment.NewLine}");
         }
     }
 }
