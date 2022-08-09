@@ -45,7 +45,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Commands\Initialise.cs" />
+    <Compile Include="Empty.cs" />
+    <Compile Include="EmptyTextViewCreationListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\ReceiveCommand.cs" />
     <Compile Include="CommandServerPackage.cs" />

@@ -29,7 +29,7 @@
     <Button guid="CommandServer" id="ServerInit" priority="0x0100" type="Button">
         <Parent guid="CommandServer" id="MyMenuGroup" />
 	    <Icon guid="ImageCatalogGuid" id="SendSignalAction" />
-	    <CommandFlag>CommandWellOnly</CommandFlag>
+	    <CommandFlag>PostExec</CommandFlag>
 	    <Strings>
 		    <ButtonText>Initialise</ButtonText>
 		    <LocCanonicalName>.CommandServer.Init</LocCanonicalName>
