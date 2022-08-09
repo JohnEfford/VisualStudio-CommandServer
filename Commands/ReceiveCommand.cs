@@ -1,38 +1,33 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.Utilities;
+using Newtonsoft.Json.Linq;
+
 
 namespace CommandServer.Commands.Commands
 {
     public interface IDispatcher
     {
         public string Name { get; }
-        public void Bunty();
+        public ValueTask<Boolean> Process(JObject payload);
     }
 
     [Export(typeof(IDispatcher))]
     [ContentType("text")]
-    public class Badger:IDispatcher
+    public class ProcessVsCommand:IDispatcher
     {
-        public string Name { get; } = "Badger";
+        public string Name { get; } = "ProcessVsCommand";
 
-        public void Bunty()
+        public ValueTask<bool> Process(
+            JObject payload)
         {
             throw new NotImplementedException();
         }
     }
-
-    //[Export(typeof(IDispatcher))]
-    //public class Billy : IDispatcher
-    //{
-    //    public string Name { get; } = "Billy";
-
-    //    public void Bunty()
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
 
     [Command(PackageIds.ReceiveCommand)]
     internal sealed class ReceiveCommand : BaseCommand<ReceiveCommand>
@@ -40,17 +35,29 @@ namespace CommandServer.Commands.Commands
         [Import]
         internal IDispatcher Dispatcher { get; set; }
         public const string RendezvousDirectory = "visual-studio-commandServer";
-        public string path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), RendezvousDirectory, "request.json");
-        
+        public string requestPath = Path.Combine(System.IO.Path.GetTempPath(), RendezvousDirectory, "request.json");
+        public string responsePath = Path.Combine(System.IO.Path.GetTempPath(), RendezvousDirectory, "response.json");
+        //public string responsePath = Path.Combine(@"C:", RendezvousDirectory, "response.json");
+
         protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
         {
-            
-            Dispatcher = await VS.GetMefServiceAsync<IDispatcher>();
+            var badger = await VS.Services.GetComponentModelAsync();
+            var items = badger.GetExtensions<IDispatcher>();
+              
             var content = "";
-            using (var fileStream = new StreamReader(path, Encoding.UTF8))
+            using (var requestFile = new StreamReader(requestPath, Encoding.UTF8))
             {
-                content = await fileStream.ReadToEndAsync();
+                content = await requestFile.ReadToEndAsync();
             }
+            JObject json = JObject.Parse(content);
+            var uuid = json["uuid"];
+
+            var date = $@"{{""uuid"":""{uuid}""}}{Environment.NewLine}";
+            using (var responseFile = new StreamWriter(responsePath))
+            {
+                await responseFile.WriteAsync($@"{{""uuid"":""{uuid}"",""error"":null,""returnValue"":"""",""warnings"":""""}}{Environment.NewLine}");
+            }
+
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             var output = await VS.Services.GetOutputWindowAsync().ConfigureAwait(false);
             output.GetPane(PackageGuids.CommandServer, out var pane);
