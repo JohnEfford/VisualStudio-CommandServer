@@ -24,7 +24,7 @@ namespace CommandServerContracts
     }
 
     /// <summary>
-    /// Command dispatch which plugs into 
+    /// Command dispatch which plugs into the Command Server plug in
     /// </summary>
     public interface ICommandServerDispatch
     {
