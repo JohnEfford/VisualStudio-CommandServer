@@ -6,10 +6,10 @@ Adds support for running arbitrary commands via file-based RPC. Designed for use
 
 * On start-up of Visual Studio, creates a communication directory in the users temp directory, called visual-studio-commandServer
 * Then waits for the CommandServer.ReceiveCommand command to be issued.
-* Once the server is triggered the command server will read the request.json file in the communication directory.
-* The command in the JSON file is then executed and a response written to response.json. **Note** that we write the JSON response on a single line, with a trailing newline, so that the client can repeatedly try to read the file until it finds a final newline to indicate that the write is complete.
+* Once the server is triggered the command server will read the ```request.json``` file in the communication directory.
+* The command in the JSON file is then executed and a response written to``` response.json```. **Note** that we write the JSON response on a single line, with a trailing newline, so that the client can repeatedly try to read the file until it finds a final newline to indicate that the write is complete.
 
-Note that the command server will refuse to execute a command if the request file is older than 3 seconds.
+**Note** that the command server will refuse to execute a command if the request file is older than 3 seconds.
 
 Requests look as follows:
 
@@ -36,4 +36,4 @@ Requests look as follows:
 ```
 * The Extension adds a new Output Window which logs data from the extension:
 ![](2022-08-14-16-26-46.png)
-* For details of adding command handlers for different command see [Contracts](/CommandServerContracts/readme.md)
+* For details of adding command handlers for different commands see [Contracts](/CommandServerContracts/readme.md)
