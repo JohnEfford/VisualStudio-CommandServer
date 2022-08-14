@@ -1,6 +1,6 @@
 # Command Server Contracts
 
-This package supplies the interface required to add a new command server command handler
+This package supplies the interface required to add a new [Command Server](/readme.md) command handler extension for Visual Studio
 
 ```CSharp
     /// <summary>
