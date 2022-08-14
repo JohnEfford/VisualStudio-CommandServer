@@ -41,7 +41,7 @@
 
 	<!-- eventually ctrl-shift-f17"-->
   <KeyBindings>
-	  <KeyBinding guid="CommandServer" id="ReceiveCommand" editor="guidVSStd97" key1="#" mod1="Control ALT" />
+	  <KeyBinding guid="CommandServer" id="ReceiveCommand" editor="guidVSStd97" key1="VK_F17" mod1="Control Shift" />
   </KeyBindings>
 
   <Symbols>
