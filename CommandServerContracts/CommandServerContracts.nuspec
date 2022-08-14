@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>VisualStudio.CommandServer.Contracts</id>
+    <version>1.0.0.0</version>
+	  <title>Visual Studio Command Server Contracts</title>
+    <authors>John Efford</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <icon>..\Resources\SendSignalAction.png</icon>
+    <projectUrl>https://github.com/JohnEffo/VisualStudio-CommandServer/tree/main/CommandServerContracts</projectUrl>
+    <description>Contracts for implementing a new Command Handler extension to be consumed by Command Handler Extension</description>
+    <copyright>2022</copyright>
+    <tags>Talon Cursorless RPC </tags>
+  </metadata>
+</package>

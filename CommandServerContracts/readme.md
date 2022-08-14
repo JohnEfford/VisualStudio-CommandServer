@@ -33,7 +33,7 @@ This package supplies the interface required to add a new [Command Server](/read
 
 ## Description
 
-* To add a class into the [Command Server]() you need to create a Visual Studio extension which implements ```ICommandServerDispatch``` 
+* To add a class into the [Command Server](/readme.md) you need to create a Visual Studio extension which implements ```ICommandServerDispatch``` 
 * The extension needs to be signify that it is a MEF Component
 * The extension needs to implement the interface above.
 * The extension needs to mark the implementation as exported via MEF
