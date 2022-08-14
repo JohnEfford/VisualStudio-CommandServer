@@ -36,9 +36,9 @@ This package supplies the interface required to add a new [Command Server](/read
 * To add a class into the [Command Server]() you need to create a Visual Studio extension which implements ```ICommandServerDispatch``` 
 * The extension needs to be signify that it is a MEF Component
 * The extension needs to implement the interface above.
-* The extension needs to make the implementation as exported via MEF
+* The extension needs to mark the implementation as exported via MEF
 
-The example below is a minimum implication which  
+The example below is a minimum implementation which reports the command has handled to the Command Server output window without actually doing any other processing.  
 
 ```CSharp
 Export(typeof(ICommandServerDispatch))]
