@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package >
   <metadata>
-    <id>VisualStudio.CommandServer.Contracts</id>
+    <id>CommandServer.Contracts</id>
     <version>1.0.0.0</version>
 	  <title>Visual Studio Command Server Contracts</title>
     <authors>John Efford</authors>
@@ -15,5 +15,5 @@
   </metadata>
 	<files>
 		<file src="SendSignalAction.png" target="" />
-	</files>
+   </files>
 </package>
