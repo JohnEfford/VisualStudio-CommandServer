@@ -26,6 +26,7 @@ namespace CommandServer.Commands.Commands
 
         private IEnumerable<ICommandServerDispatch> _commandServerDispatches;
         //public string responsePath = Path.Combine(@"C:", RendezvousDirectory, "response.json");
+        public const int maxStatlenessInSeconds = 3;
 
         protected override async Task InitializeCompletedAsync()
         {
@@ -35,7 +36,7 @@ namespace CommandServer.Commands.Commands
 
         protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
         {
-            var (content, signalTouched) = await GetContentFromKnowLocation();
+            var (content, signalTouched) = await GetContentFromKnowLocationAsync();
             JObject json = JObject.Parse(content);
             var uuid = json["uuid"];
             var result = await PerformCommandAsync(json, uuid);
@@ -54,7 +55,7 @@ namespace CommandServer.Commands.Commands
             output.GetPane(PackageGuids.CommandServer, out var pane);
             var commandOutput = result.Message != null ? $"{result.Message}{Environment.NewLine}" : result.Message;
             pane.OutputStringThreadSafe(
-                $"Command received:Signal={signalTouched:hh:mm:ss.fff} GetContentFromKnowLocation={content.ToString()} {Environment.NewLine}" +
+                $"Command received:Signal={signalTouched:hh:mm:ss.fff} GetContentFromKnowLocationAsync={content.ToString()} {Environment.NewLine}" +
                 commandOutput);
         }
 
@@ -74,17 +75,24 @@ namespace CommandServer.Commands.Commands
             return result;
         }
 
-        private async Task<(string content, DateTime signalTouched)> GetContentFromKnowLocation()
+        private async Task<(string content, DateTime signalTouched)> GetContentFromKnowLocationAsync()
         {
-            var content = "";
+            var content = "Request file stale";
             var signalTouched = File.GetLastWriteTime(signalPath);
-            using (var requestFile = new StreamReader(requestPath, Encoding.UTF8))
+            var requstTouched = File.GetLastWriteTime(signalPath);
+            if (Math.Abs(requstTouched.Millisecond - signalTouched.Millisecond) < 200 && !RequestToOld(requstTouched))
             {
-                content = await requestFile.ReadToEndAsync();
+                using (var requestFile = new StreamReader(requestPath, Encoding.UTF8))
+                {
+                    content = await requestFile.ReadToEndAsync();
+                }
             }
-
             return (content, signalTouched);
         }
+
+        private bool RequestToOld(
+            DateTime requstTouched) => requstTouched.AddSeconds(maxStatlenessInSeconds) < DateTime.Now;
+    
 
         private async Task<CommandServerResult> ExecuteCommand(
             JObject json,
