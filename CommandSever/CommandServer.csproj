@@ -102,7 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommandServerContracts\CommandServerContracts.csproj">
-      <Project>{8D0788F1-BE6F-42BD-BABA-D340C249B398}</Project>
+      <Project>{8d0788f1-be6f-42bd-baba-d340c249b398}</Project>
       <Name>CommandServerContracts</Name>
     </ProjectReference>
   </ItemGroup>
