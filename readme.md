@@ -36,4 +36,4 @@ Requests look as follows:
 ```
 * The Extension adds a new Output Window which logs data from the extension:
 ![](2022-08-14-16-26-46.png)
-* For details of adding command handlers for different command see [Contracts](\CommandServerContracts\readme.md)
+* For details of adding command handlers for different command see [Contracts](/CommandServerContracts/readme.md)
