@@ -36,27 +36,52 @@ namespace CommandServer.Commands.Commands
 
         protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
         {
-            var (content, signalTouched) = await GetContentFromKnowLocationAsync();
-            JObject json = JObject.Parse(content);
-            var uuid = json["uuid"];
-            var result = await PerformCommandAsync(json, uuid);
-            await WriteResultsToOutputAsync(signalTouched, json, result);
+            System.Diagnostics.Debug.WriteLine("Executing command");
+            var (contentLoaded, content, signalTouched) = await GetContentFromKnowLocationAsync();
+            string outputString;
+            if (contentLoaded)
+            {
+                try
+                {
+                    JObject json = JObject.Parse(content);
+                    var uuid = json["uuid"];
+                    var result = await PerformCommandAsync(json, uuid);
+                    outputString = CreateProcessedString(signalTouched, json, result);
+                }
+                catch (Exception exception)
+                {
+                    outputString = $"message:{exception.Message} {Environment.NewLine} stack:{exception.StackTrace} {Environment.NewLine}content: {content}";
+                }
+            }
+            else
+            {
+                outputString = content;
+            }
+            await WriteResultsToOutputAsync(outputString);
+
         }
 
         private static async ValueTask WriteResultsToOutputAsync(
-            DateTime signalTouched,
-            JObject content,
-            CommandServerResult result)
+           string outputString)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             var output = await VS.Services.GetOutputWindowAsync().ConfigureAwait(false);
             output.CreatePane(PackageGuids.CommandServer, "Command Server", Convert.ToInt32(true),
                 Convert.ToInt32(false));
             output.GetPane(PackageGuids.CommandServer, out var pane);
+            pane.OutputStringThreadSafe(outputString);
+        }
+
+        private static string CreateProcessedString(
+            DateTime signalTouched,
+            JObject content,
+            CommandServerResult result)
+        {
             var commandOutput = result.Message != null ? $"{result.Message}{Environment.NewLine}" : result.Message;
-            pane.OutputStringThreadSafe(
+            var outputString =
                 $"Command received:Signal={signalTouched:hh:mm:ss.fff} GetContentFromKnowLocationAsync={content.ToString()} {Environment.NewLine}" +
-                commandOutput);
+                commandOutput;
+            return outputString;
         }
 
         private async Task<CommandServerResult> PerformCommandAsync(
@@ -75,19 +100,26 @@ namespace CommandServer.Commands.Commands
             return result;
         }
 
-        private async Task<(string content, DateTime signalTouched)> GetContentFromKnowLocationAsync()
+        private async Task<(bool contentLoaded, string content, DateTime signalTouched)> GetContentFromKnowLocationAsync()
         {
-            var content = "Request file stale";
+            var contentLoaded = false;
+            string content;
             var signalTouched = File.GetLastWriteTime(signalPath);
-            var requstTouched = File.GetLastWriteTime(signalPath);
-            if (Math.Abs(requstTouched.Millisecond - signalTouched.Millisecond) < 200 && !RequestToOld(requstTouched))
+            var requestTouched = File.GetLastWriteTime(requestPath);
+            var requestTooOld = RequestToOld(requestTouched);
+            if (!requestTooOld)
             {
                 using (var requestFile = new StreamReader(requestPath, Encoding.UTF8))
                 {
                     content = await requestFile.ReadToEndAsync();
+                    contentLoaded = true;
                 }
             }
-            return (content, signalTouched);
+            else
+            {
+                content = $"RequestToOld:{requestTooOld}";
+            }
+            return (contentLoaded, content, signalTouched);
         }
 
         private bool RequestToOld(

@@ -11,8 +11,8 @@ namespace CommandServer
         public const string Name = "CommandServer";
         public const string Description = @"Adds support for running arbitrary commands via file-based RPC. Designed for use with voice-control systems such as Talon.Adds support for running arbitrary commands via file-based RPC.";
         public const string Language = "en-US";
-        public const string Version = "1.0";
-        public const string Author = "Johneffo";
+        public const string Version = "1.0.0.1";
+        public const string Author = "John Efford";
         public const string Tags = "";
     }
 }
